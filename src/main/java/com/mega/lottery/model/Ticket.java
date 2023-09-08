@@ -21,7 +21,7 @@ public class Ticket {
 	
 	private Integer numeroBilhete;
 	
-	@NotBlank(message = "O atributo status é obrigatório!")
+	@NotBlank(message = "O atributo status e obrigatorio!")
 	private String status;
 	
 	@ManyToOne
@@ -45,6 +45,12 @@ public class Ticket {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public Person getPerson() {
+		return person;
+	}
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 
 	

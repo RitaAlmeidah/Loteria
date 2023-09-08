@@ -23,15 +23,15 @@ public class Person {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank(message = "O atributo cpf é obrigatório!")
-	@Size (min = 3, message = "O atributo nome deve conter no mínimo 03 caracteres")
+	@NotBlank(message = "O atributo nome e obrigatorio!")
+	@Size (min = 3, message = "O atributo nome deve conter no minimo 03 caracteres")
 	private String nome;
 	
-	@NotBlank(message = "O atributo cpf é obrigatório!")
-	@Size(min = 11, max = 11, message = "O atributo cpf deve ser igual a 11 caracteres")
-	private Integer cpf;
+	@NotBlank(message = "O atributo cpf e obrigatorio!")
+	@Size (min = 11, max = 11, message = "O atributo cpf deve conter 11 caracteres")
+	private String cpf;
 	
-	@NotBlank(message = "O atributo email é obrigatório!")
+	@NotBlank(message = "O atributo email e obrigatorio!")
 	private String email;
 	
 
@@ -45,8 +45,11 @@ public class Person {
 	public String getNome() {
 		return nome;
 	}
-	public Integer getCpf() {
+	public String getCpf() {
 		return cpf;
+	}
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 	public String getEmail() {
 		return email;
@@ -57,12 +60,18 @@ public class Person {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public void setCpf(Integer cpf) {
-		this.cpf = cpf;
-	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public List<Ticket> getTicket() {
+		return ticket;
+	}
+	public void setTicket(List<Ticket> ticket) {
+		this.ticket = ticket;
+	}
+	
+	
 
 }
 
