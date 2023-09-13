@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 
 
@@ -19,7 +20,8 @@ public class Ticket {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private Integer numeroBilhete;
+	@Digits(integer = 10, fraction = 0, message = "O número do bilhete deve ter exatamente 10 dígitos.")
+	private Long numeroBilhete;
 	
 	@NotBlank(message = "O atributo status e obrigatorio!")
 	private String status;
@@ -27,31 +29,40 @@ public class Ticket {
 	@ManyToOne
 	@JsonIgnoreProperties("ticket")
 	private Person person;
-	
+
 	public Long getId() {
 		return id;
 	}
-	public Integer getNumeroBilhete() {
+
+	public Long getNumeroBilhete() {
 		return numeroBilhete;
 	}
+
 	public String getStatus() {
 		return status;
 	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public void setNumeroBilhete(Integer numeroBilhete) {
-		this.numeroBilhete = numeroBilhete;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+
 	public Person getPerson() {
 		return person;
 	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setNumeroBilhete(Long numeroBilhete) {
+		this.numeroBilhete = numeroBilhete;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public void setPerson(Person person) {
 		this.person = person;
 	}
-
+	
 	
 }
+	
+	

@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,11 +30,11 @@ public class Person {
 	
 	@NotBlank(message = "O atributo cpf e obrigatorio!")
 	@Size (min = 11, max = 11, message = "O atributo cpf deve conter 11 caracteres")
+	@Column(nullable = false, unique = true)
 	private String cpf;
 	
 	@NotBlank(message = "O atributo email e obrigatorio!")
 	private String email;
-	
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("person")
