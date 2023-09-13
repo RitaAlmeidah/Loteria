@@ -1,5 +1,6 @@
 package com.mega.lottery.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +19,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.mega.lottery.model.Person;
 import com.mega.lottery.model.Ticket;
+import com.mega.lottery.model.TicketDTO;
+import com.mega.lottery.repository.PersonRepository;
 import com.mega.lottery.repository.TicketRepository;
+import com.mega.lottery.service.SorteioService;
+import com.mega.lottery.service.TicketService;
 
 import jakarta.validation.Valid;
 
@@ -27,31 +33,56 @@ import jakarta.validation.Valid;
 @RequestMapping("/ticket")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TicketController {
+
+	@Autowired
+	private PersonRepository personRepository;
 	
 	@Autowired
 	private TicketRepository ticketRepository;
 	
-	@GetMapping("/all")
-	public ResponseEntity<List<Ticket>> getAll(){
-		return ResponseEntity.ok(ticketRepository.findAll());
+	@Autowired
+	private SorteioService sorteioService;
+	
+	@Autowired
+	private TicketService ticketService;
+	
+	@GetMapping
+	public ResponseEntity<List<TicketDTO>> getAll(){
+		return ticketService.getAllTicket();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Ticket> getById(@PathVariable Long id) {
-		return ticketRepository.findById(id)
-				.map(resposta -> ResponseEntity.ok(resposta))
-				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	public ResponseEntity<TicketDTO> getById(@PathVariable Long id) {
+		Optional<Ticket> ticketOptional = ticketRepository.findById(id);
+		return ticketService.getTicket(ticketOptional);
 	}
 	
 	@GetMapping("/numeroBilhete/{numeroBilhete}")
-	public ResponseEntity<List<Ticket>> getNumeroBilhete(@PathVariable Integer numeroBilhete){
-		return ResponseEntity.ok(ticketRepository.findAllByNumeroBilhete(numeroBilhete));
+	public ResponseEntity<TicketDTO> getNumeroBilhete(@PathVariable Long numeroBilhete){
+		Optional<Ticket> ticketOptional = ticketRepository.findAllByNumeroBilhete(numeroBilhete);
+		return ticketService.getTicket(ticketOptional);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Ticket> post(@Valid @RequestBody Ticket ticket){
+	public ResponseEntity<List<Ticket>> post(@Valid @RequestBody List<Ticket> ticket){
+		List<Ticket> lista = new ArrayList<>();
+		
+		for(Ticket bilhete : ticket) {
+			Long id = bilhete.getPerson().getId();
+			Optional<Person> person = personRepository.findById(id);
+			
+			if(person.isPresent()) {
+				bilhete.getPerson().setId(person.get().getId());
+				bilhete.setNumeroBilhete(sorteioService.sortearSequencia());
+				lista.add(bilhete);
+			}else {
+				return ResponseEntity.notFound().build();
+			}
+		}
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ticketRepository.save(ticket));
+				.body(ticketRepository.saveAll(lista));
+		
+	
 	}
 	
 	@PutMapping

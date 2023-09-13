@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.mega.lottery.model.Person;
+import com.mega.lottery.model.PersonDTO;
 import com.mega.lottery.repository.PersonRepository;
-
-
+import com.mega.lottery.service.PersonService;
 
 @RestController
 @RequestMapping("/person")
@@ -31,21 +31,23 @@ public class PersonController {
 	@Autowired
 	private PersonRepository personRepository;
 	
-	@GetMapping("/all")
-	public ResponseEntity<List<Person>> getAll(){
-		return ResponseEntity.ok(personRepository.findAll());
+	@Autowired
+	private PersonService personService;
+	@GetMapping
+	public ResponseEntity<List<PersonDTO>> getAll() {
+		return personService.getAllPersons();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Person> getById(@PathVariable Long id) {
-		return personRepository.findById(id)
-				.map(resposta -> ResponseEntity.ok(resposta))
-				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	public ResponseEntity<PersonDTO> getById(@PathVariable Long id) {
+		Optional<Person> personOptional = personRepository.findById(id);
+		return personService.getPerson(personOptional);
 	}
 	
 	@GetMapping("/cpf/{cpf}")
-	public ResponseEntity<List<Person>> getByCpf(@PathVariable String cpf){
-		return ResponseEntity.ok(personRepository.findAllByCpf(cpf));
+	public ResponseEntity<PersonDTO> getByCpf(@PathVariable String cpf){
+		Optional<Person> personOptional = personRepository.findByCpf(cpf);
+		return personService.getPerson(personOptional);
 	}
 	
 	@PostMapping
