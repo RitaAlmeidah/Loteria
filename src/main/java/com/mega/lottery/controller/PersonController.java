@@ -3,6 +3,8 @@ package com.mega.lottery.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,8 @@ import com.mega.lottery.service.PersonService;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PersonController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(PersonController.class);
+	
 	@Autowired
 	private PersonRepository personRepository;
 	
@@ -35,29 +39,44 @@ public class PersonController {
 	private PersonService personService;
 	@GetMapping
 	public ResponseEntity<List<PersonDTO>> getAll() {
+		
+		logger.info("PersonController - Iniciando Metodo getAll()" );
+		
 		return personService.getAllPersons();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<PersonDTO> getById(@PathVariable Long id) {
+		
+		logger.info("PersonController - Iniciando Metodo getById() - Id = {}", id );
+		
 		Optional<Person> personOptional = personRepository.findById(id);
 		return personService.getPerson(personOptional);
 	}
 	
 	@GetMapping("/cpf/{cpf}")
 	public ResponseEntity<PersonDTO> getByCpf(@PathVariable String cpf){
+		
+		logger.info("PersonController - Iniciando Metodo getByCpf() - CPF = {}", cpf );
+		
 		Optional<Person> personOptional = personRepository.findByCpf(cpf);
 		return personService.getPerson(personOptional);
 	}
 	
 	@PostMapping
 	public ResponseEntity<Person> post(@RequestBody Person person){
+		
+		logger.info("PersonController - Iniciando Metodo post() - Person = {}", person );
+		
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(personRepository.save(person));
 	}
 	
 	@PutMapping
 	public ResponseEntity<Person> put(@RequestBody Person person) {
+		
+		logger.info("PersonController - Iniciando Metodo put() - Person = {}", person );
+		
 		return personRepository.findById(person.getId())
 				.map(resposta -> ResponseEntity.status(HttpStatus.OK)
 						.body(personRepository.save(person)))
@@ -67,12 +86,17 @@ public class PersonController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
+		
+		logger.info("PersonController - Iniciando Metodo delete() - Id = {}", id );
+		
 		Optional<Person> person = personRepository.findById(id);
 		
-		if(person.isEmpty())
+		if(person.isEmpty()) {
+			logger.warn("Pessoa não encontrada!");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		
+		}
 		personRepository.deleteById(id);
+		logger.info("Deletado com sucesso!");
 	}
 	
 }

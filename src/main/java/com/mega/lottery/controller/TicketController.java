@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,8 @@ import jakarta.validation.Valid;
 @RequestMapping("/ticket")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TicketController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(TicketController.class);
 
 	@Autowired
 	private PersonRepository personRepository;
@@ -48,23 +52,35 @@ public class TicketController {
 	
 	@GetMapping
 	public ResponseEntity<List<TicketDTO>> getAll(){
+		
+		logger.info("TicketController - Iniciando Metodo getAll()" );
+		
 		return ticketService.getAllTicket();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<TicketDTO> getById(@PathVariable Long id) {
+		
+		logger.info("TicketController - Iniciando Metodo getById() - Id = {}", id );
+		
 		Optional<Ticket> ticketOptional = ticketRepository.findById(id);
 		return ticketService.getTicket(ticketOptional);
 	}
 	
 	@GetMapping("/numeroBilhete/{numeroBilhete}")
 	public ResponseEntity<TicketDTO> getNumeroBilhete(@PathVariable Long numeroBilhete){
+		
+		logger.info("TicketController - Iniciando Metodo getNumeroBilhete() - Numero Bilhete = {}", numeroBilhete );
+		
 		Optional<Ticket> ticketOptional = ticketRepository.findAllByNumeroBilhete(numeroBilhete);
 		return ticketService.getTicket(ticketOptional);
 	}
 	
 	@PostMapping
 	public ResponseEntity<List<Ticket>> post(@Valid @RequestBody List<Ticket> ticket){
+		
+		logger.info("TicketController - Iniciando Metodo post() - Lista Ticket = {}", ticket );
+		
 		List<Ticket> lista = new ArrayList<>();
 		
 		for(Ticket bilhete : ticket) {
@@ -73,6 +89,7 @@ public class TicketController {
 			
 			if(person.isPresent()) {
 				bilhete.getPerson().setId(person.get().getId());
+
 				bilhete.setNumeroBilhete(sorteioService.sortearSequencia());
 				lista.add(bilhete);
 			}else {
@@ -87,6 +104,9 @@ public class TicketController {
 	
 	@PutMapping
 	public ResponseEntity<Ticket> put(@Valid @RequestBody Ticket ticket) {
+		
+		logger.info("TicketController - Iniciando Metodo put() - Ticket = {}", ticket );
+		
 		return ticketRepository.findById(ticket.getId())
 				.map(resposta -> ResponseEntity.status(HttpStatus.OK)
 						.body(ticketRepository.save(ticket)))
@@ -96,12 +116,19 @@ public class TicketController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
+		
+		logger.info("TicketController - Iniciando Metodo delete() - Id = {}", id );
+		
 		Optional<Ticket> ticket = ticketRepository.findById(id);
 		
-		if(ticket.isEmpty())
+		if(ticket.isEmpty()) {
+			
+			logger.warn("Pessoa não encontrada!");
+			
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		
+		}
 		ticketRepository.deleteById(id);
+		logger.info("Deletado com sucesso!");
 	}
 
 }
