@@ -40,6 +40,13 @@ public class Person {
 	@JsonIgnoreProperties("person")
 	private List<Ticket> ticket;
 	
+	@Override
+	public String toString() {
+		return "id=" + id + ", nome='" + nome + '\'' + ", cpf='" + cpf + '\'' + ", email='" + email + '\'' + ", ticket="
+				+ ticket + '}';
+	}
+
+	
 	public Long getId() {
 		return id;
 	}
@@ -72,8 +79,6 @@ public class Person {
 		this.ticket = ticket;
 	}
 	
-	
-
 }
 
 

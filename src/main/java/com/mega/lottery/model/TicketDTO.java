@@ -11,6 +11,13 @@ public class TicketDTO {
 	@JsonIgnoreProperties("ticket")
 	private PersonDTO person;
 
+	@Override
+	public String toString() {
+		return "TicketDTO{" + "numeroBilhete=" + numeroBilhete + ", status='" + status + '\'' + ", person=" + person
+				+ '}';
+	}
+
+	
 	public Long getNumeroBilhete() {
 		return numeroBilhete;
 	}

@@ -30,6 +30,11 @@ public class Ticket {
 	@JsonIgnoreProperties("ticket")
 	private Person person;
 
+	@Override
+	public String toString() {
+		return "Ticket{" + "id=" + id + ", numeroBilhete=" + numeroBilhete + ", status='" + status + '\'';
+	}
+
 	public Long getId() {
 		return id;
 	}
