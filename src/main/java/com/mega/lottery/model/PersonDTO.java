@@ -13,6 +13,16 @@ public class PersonDTO {
 	@JsonIgnoreProperties("person")
 	private List<TicketDTO> ticket;
 
+	public PersonDTO(String nome, String email, List<TicketDTO> ticket) {
+		this.nome = nome;
+		this.email = email;
+		this.ticket = ticket;
+	}
+
+	
+	public PersonDTO() {
+	}
+
 	@Override
 	public String toString() {
 		return "PersonDTO{" + "nome='" + nome + '\'' + ", email='" + email + '\'' + ", ticket=" + ticket + '}';

@@ -35,6 +35,18 @@ public class Ticket {
 		return "Ticket{" + "id=" + id + ", numeroBilhete=" + numeroBilhete + ", status='" + status + '\'';
 	}
 
+	public Ticket(Long id,
+			@Digits(integer = 10, fraction = 0, message = "O número do bilhete deve ter exatamente 10 dígitos.") Long numeroBilhete,
+			@NotBlank(message = "O atributo status e obrigatorio!") String status, Person person) {
+		this.id = id;
+		this.numeroBilhete = numeroBilhete;
+		this.status = status;
+		this.person = person;
+	}
+
+	public Ticket() {
+	}
+
 	public Long getId() {
 		return id;
 	}

@@ -19,7 +19,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "tb_person")
 public class Person {
-	
+		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -47,6 +47,21 @@ public class Person {
 	}
 
 	
+	public Person(Long id,
+			@NotBlank(message = "O atributo nome e obrigatorio!") @Size(min = 3, message = "O atributo nome deve conter no minimo 03 caracteres") String nome,
+			@NotBlank(message = "O atributo cpf e obrigatorio!") @Size(min = 11, max = 11, message = "O atributo cpf deve conter 11 caracteres") String cpf,
+			@NotBlank(message = "O atributo email e obrigatorio!") String email, List<Ticket> ticket) {
+		this.id = id;
+		this.nome = nome;
+		this.cpf = cpf;
+		this.email = email;
+		this.ticket = ticket;
+	}
+
+
+	public Person() {
+	}
+
 	public Long getId() {
 		return id;
 	}

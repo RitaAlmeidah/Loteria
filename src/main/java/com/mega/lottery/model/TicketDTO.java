@@ -17,7 +17,15 @@ public class TicketDTO {
 				+ '}';
 	}
 
-	
+	public TicketDTO(Long numeroBilhete, String status, PersonDTO person) {
+		this.numeroBilhete = numeroBilhete;
+		this.status = status;
+		this.person = person;
+	}
+
+	public TicketDTO() {
+	}
+
 	public Long getNumeroBilhete() {
 		return numeroBilhete;
 	}
