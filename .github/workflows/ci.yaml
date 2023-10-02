@@ -15,7 +15,7 @@ jobs:
       mysql:
         image: mysql:8.0.33
         env:
-          MYSQL_ROOT_PASSWORD: 2023
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: db_loteria
         ports:
           - 3306:3306
@@ -39,7 +39,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install -DskipTests
 
   test:
     name: Unit Tests
@@ -49,7 +49,7 @@ jobs:
       mysql:
         image: mysql:8.0.33
         env:
-          MYSQL_ROOT_PASSWORD: 2023
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: db_loteria
         ports:
           - 3306:3306
