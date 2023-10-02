@@ -1,4 +1,4 @@
-package com.mega.loterry.configuration;
+package com.mega.lottery.configuration;
 
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
